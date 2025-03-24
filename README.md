@@ -123,8 +123,6 @@ C:\\Letz AI\\mcp\\letzai\\build\\index.js
 
 ```
 
-- **env**: This is where you set your `LETZAI_API_KEY`. This key is required to use the public API for image generation. You can find more details on how to get the API key in the [Letz AI API Docs](https://letz.ai/docs/api).
-
 ### 6. Run the MCP Server
 
 Now that everything is set up, you can start using the Letz AI MCP in the Claude Desktop App. The server should be ready for image generation tasks once the app is running with the correct API key in the environment.

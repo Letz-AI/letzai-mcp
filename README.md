@@ -1,6 +1,6 @@
 # LetzAI MCP Setup Guide
 
-This guide will walk you through the process of setting up and using the Letz AI MCP (Model Context Protocol) for image generation.
+This guide will walk you through the process of setting up and using the LetzAI MCP (Model Context Protocol) for image generation.
 
 ## Prerequisites
 
@@ -8,13 +8,13 @@ Before you begin, ensure that you have the following:
 
 - **Node.js** installed on your system. You can download it from [Node.js official site](https://nodejs.org/).
 - **Claude Desktop App** installed. If you don't have it, download it from [Claude Desktop App](https://claude.app).
-- **Letz AI API Key**. You can obtain it by visiting [Letz AI API](https://letz.ai/docs/api).
+- **LetzAI API Key**. You can obtain it by visiting [LetzAI API](https://letz.ai/docs/api).
 
 ## Setup Steps
 
 ### 1. Download the Git Folder
 
-Download the repository containing the Letz AI MCP project and place it in a location outside of your Downloads folder. For example:
+Download the repository containing the LetzAI MCP project and place it in a location outside of your Downloads folder. For example:
 
 ```
 C:\\Users\\username\\desktop
@@ -78,7 +78,7 @@ After running `npx tsc`, you must **restart** the Claude Desktop App for it to r
         "C:\\ABSOLUTE\\PATH\\TO\\PARENT\\FOLDER\\letzai-mcp\\build\\index.js"
       ],
       "env": {
-        "LETZAI_API_KEY": "<Your Letz AI API Key>"
+        "LETZAI_API_KEY": "<Your LetzAI API Key>"
       }
     }
   }
@@ -94,7 +94,7 @@ After running `npx tsc`, you must **restart** the Claude Desktop App for it to r
       "command": "node",
       "args": ["/ABSOLUTE/PATH/TO/PARENT/FOLDER/letzai-mcp/build/index.js"],
       "env": {
-        "LETZAI_API_KEY": "<Your Letz AI API Key>"
+        "LETZAI_API_KEY": "<Your LetzAI API Key>"
       }
     }
   }
@@ -110,7 +110,7 @@ After running `npx tsc`, you must **restart** the Claude Desktop App for it to r
       "command": "node",
       "args": ["/ABSOLUTE/PATH/TO/PARENT/FOLDER/letzai-mcp/build/index.js"],
       "env": {
-        "LETZAI_API_KEY": "<Your Letz AI API Key>"
+        "LETZAI_API_KEY": "<Your LetzAI API Key>"
       }
     }
   }
@@ -130,7 +130,7 @@ C:\\Users\\username\\desktop\\letzai-mcp\\build\\index.js
 
 ### 6. Run the MCP Server
 
-Now that everything is set up, you can start using the Letz AI MCP in the Claude Desktop App. The server should be ready for image generation tasks once the app is running with the correct API key in the environment.
+Now that everything is set up, you can start using the LetzAI MCP in the Claude Desktop App. The server should be ready for image generation tasks once the app is running with the correct API key in the environment.
 
 **Important:** After making changes to the configuration, you **must restart Claude** for the changes to take effect.
 
@@ -156,4 +156,4 @@ This will upscale the image using the strength parameter 1. You can pass entire 
 - **Invalid API Key**: Double-check that you have correctly added your API key under the `LETZAI_API_KEY` variable in the Claude Desktop App settings.
 - **File Path Issues**: Make sure that the path to the `index.js` file is correct. If you're unsure about the path, use the absolute path to the file.
 
-For more detailed documentation and support, visit [Letz AI Docs](https://letz.ai/docs/api).
+For more detailed documentation and support, visit [LetzAI Docs](https://letz.ai/docs/api).

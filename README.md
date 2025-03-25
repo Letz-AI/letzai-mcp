@@ -56,11 +56,14 @@ After running `npx tsc`, you must **restart** the Claude Desktop App for it to r
 
 ### 5. Set Up MCP Configuration in Claude Desktop App
 
+![open settings](settingsOpen.png)
+
 1. **Open the Claude Desktop App**.
 2. **Click on the Menu Icon** in the top-left corner.
 3. From the dropdown, select **File**.
 4. Navigate to **Settings**.
 5. Under the **Developer** section, you will see an option for **Edit Config**.
+   ![view developer settings](developerSettings.png)
 6. Click on **Edit Config** — this will open the configuration folder.
 7. Locate the file `claude_desktop_config.json` and edit it as needed.
 

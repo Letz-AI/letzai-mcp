@@ -142,9 +142,13 @@ Click on the hammer icon to view the installed MCP tools.
 
 Once you've set up the MCP in the Claude Desktop App, you can test it by running the following prompt:
 
-- **Create image with LetzAi using prompt: "A beautiful woman standing in a city at sunset. She has long flowing hair, wearing a chic, modern outfit, and is gazing out at the horizon with a serene expression. The cityscape behind her features tall buildings, with the warm hues of the sunset casting a golden glow over the scene. The sky is a blend of oranges, pinks, and purples, creating a peaceful yet vibrant atmosphere. Soft light reflects off the windows of the buildings, and a few people can be seen walking in the background, adding life to the urban setting."**
+- **Create image with LetzAi using prompt: "photo of @mischstrotz drinking a beer, dressed as a knight"**
 
-This will create the image based on the provided prompt and automatically upscale it after the image is generated. This ensures both image creation and upscaling functionalities are working correctly with the Letz AI MCP in Claude. Claude will open the image in your preferred browser.
+This will create the image based on the provided prompt, using the model @mischstrotz from LetzAI. Claude will open the image in your preferred browser.
+
+- **Upscale this image with strength 1: [https://letz.ai/image/d6a67077-f156-46d7-a1a2-1dc49e83dd91](https://images.letz.ai/5ed74083-f9d1-4897-b8e3-c8f1596af767/d6a67077-f156-46d7-a1a2-1dc49e83dd91/high_quality_photo_of_mischstrotz_holding_a_beer_s20250322080513.jpg)**
+
+This will upscale the image using the strength parameter 1. You can pass entire URLs, or just the LetzAI Image IDs e.g. d6a67077-f156-46d7-a1a2-1dc49e83dd91
 
 ## Troubleshooting
 

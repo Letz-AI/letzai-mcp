@@ -1,4 +1,4 @@
-# Letz AI MCP Setup Guide
+# LetzAI MCP Setup Guide
 
 This guide will walk you through the process of setting up and using the Letz AI MCP (Model Context Protocol) for image generation.
 
@@ -142,7 +142,7 @@ Click on the hammer icon to view the installed MCP tools.
 
 Once you've set up the MCP in the Claude Desktop App, you can test it by running the following prompt:
 
-- **Create image with LetzAi using prompt: "photo of @mischstrotz drinking a beer, dressed as a knight"**
+- **Create image with LetzAI using prompt: "photo of @mischstrotz drinking a beer, dressed as a knight"**
 
 This will create the image based on the provided prompt, using the model @mischstrotz from LetzAI. Claude will open the image in your preferred browser.
 

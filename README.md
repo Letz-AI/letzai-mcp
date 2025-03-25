@@ -135,7 +135,7 @@ Now that everything is set up, you can start using the Letz AI MCP in the Claude
 
 ![claude prompt ui after installtion](claudeInterface.png)
 Click on the hammer icon to view the installed MCP tools.
-![claude mcp tools](mcpTools.png)
+![claude mcp tools](mcpToolsInfo.png)
 
 Once you've set up the MCP in the Claude Desktop App, you can test it by running the following prompt:
 

@@ -1,0 +1,19 @@
+# Smithery configuration file: https://smithery.ai/docs/build/project-config
+
+startCommand:
+  type: stdio
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({ command: 'node', args: ['build/index.js'], env: { LETZAI_API_KEY: config.letzaiApiKey } })
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - letzaiApiKey
+    properties:
+      letzaiApiKey:
+        type: string
+        description: LetzAI API Key for authenticating requests
+  exampleConfig:
+    letzaiApiKey: YOUR_LETZAI_API_KEY

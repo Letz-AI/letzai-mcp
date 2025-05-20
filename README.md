@@ -1,5 +1,6 @@
 # LetzAI MCP Setup Guide
 
+[![smithery badge](https://smithery.ai/badge/@Letz-AI/letzai-mcp)](https://smithery.ai/server/@Letz-AI/letzai-mcp)
 This guide will walk you through the process of setting up and using the LetzAI MCP (Model Context Protocol) for image generation.
 
 ## Prerequisites
@@ -11,6 +12,14 @@ Before you begin, ensure that you have the following:
 - **LetzAI API Key**. You can obtain it by visiting [LetzAI API](https://letz.ai/docs/api).
 
 ## Setup Steps
+
+### Installing via Smithery
+
+To install LetzAI for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@Letz-AI/letzai-mcp):
+
+```bash
+npx -y @smithery/cli install @Letz-AI/letzai-mcp --client claude
+```
 
 ### 1. Download the Git Folder
 

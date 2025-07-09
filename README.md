@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/letz-ai-letzai-mcp-badge.png)](https://mseep.ai/app/letz-ai-letzai-mcp)
+
 # LetzAI MCP Setup Guide
 
 This guide will walk you through the process of setting up and using the LetzAI MCP (Model Context Protocol) for image generation.

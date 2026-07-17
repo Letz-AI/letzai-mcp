@@ -1,10 +1,16 @@
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import express, { type Request, type Response } from 'express';
 import { config } from './config.js';
+import { landingHtml } from './landing.js';
 import { buildMcpServer } from './mcp-server.js';
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
+
+// Human-facing landing page / user guide (same host as the MCP protocol).
+app.get('/', (_req: Request, res: Response) => {
+  res.type('html').send(landingHtml);
+});
 
 app.get('/healthz', (_req: Request, res: Response) => {
   res.json({ ok: true, service: 'letzai-mcp-server' });

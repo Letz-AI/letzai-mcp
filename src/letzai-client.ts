@@ -1,28 +1,14 @@
 import { config } from './config.js';
 
-export interface CreateImageArgs {
-  prompt: string;
-  width?: number;
-  height?: number;
-  quality?: number;
-  creativity?: number;
-  hasWatermark?: boolean;
-  systemVersion?: number;
-  mode?: string;
-  /** Optional org to deduct credits from (caller must be a member). */
-  organizationId?: string;
-}
-
-interface CreatedImage {
-  id: string;
-}
-
-export interface LetzAiImage {
+export interface LetzAiJob {
   id: string;
   status?: string;
   progress?: number;
   imageVersions?: Record<string, string> & { original?: string };
+  [key: string]: unknown;
 }
+
+type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 /**
  * Thin authenticated adapter over the LetzAI public API. One instance per
@@ -40,45 +26,40 @@ export class LetzAiClient {
     };
   }
 
-  async createImage(args: CreateImageArgs): Promise<CreatedImage> {
-    const res = await fetch(`${config.apiBaseUrl}/images`, {
-      method: 'POST',
+  /** Authenticated JSON request against the public API. Throws on non-2xx. */
+  async request<T = unknown>(
+    method: Method,
+    path: string,
+    body?: unknown,
+  ): Promise<T> {
+    const res = await fetch(`${config.apiBaseUrl}${path}`, {
+      method,
       headers: this.headers(),
-      body: JSON.stringify(args),
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) {
       throw new Error(
-        `LetzAI createImage failed (${res.status}): ${await res.text()}`,
+        `LetzAI ${method} ${path} failed (${res.status}): ${await res.text()}`,
       );
     }
-    return (await res.json()) as CreatedImage;
+    if (res.status === 204) return undefined as T;
+    return (await res.json()) as T;
   }
 
-  async getImage(id: string): Promise<LetzAiImage> {
-    const res = await fetch(`${config.apiBaseUrl}/images/${id}`, {
-      headers: this.headers(),
-    });
-    if (!res.ok) {
-      throw new Error(
-        `LetzAI getImage failed (${res.status}): ${await res.text()}`,
-      );
-    }
-    return (await res.json()) as LetzAiImage;
-  }
-
-  /** Poll until the generation reports 100% / ready, or the timeout elapses. */
-  async pollImage(id: string): Promise<LetzAiImage> {
+  /** Poll a GET endpoint until `isDone`, or the configured timeout elapses. */
+  async poll<T>(path: string, isDone: (r: T) => boolean): Promise<T> {
     const start = Date.now();
     for (;;) {
-      const image = await this.getImage(id);
-      const done = (image.progress ?? 0) >= 100 || image.status === 'ready';
-      if (done) return image;
+      const r = await this.request<T>('GET', path);
+      if (isDone(r)) return r;
       if (Date.now() - start > config.pollTimeoutMs) {
-        throw new Error(
-          `Image ${id} did not finish within ${config.pollTimeoutMs}ms`,
-        );
+        throw new Error(`Timed out polling ${path} after ${config.pollTimeoutMs}ms`);
       }
-      await new Promise((r) => setTimeout(r, config.pollIntervalMs));
+      await new Promise((resolve) => setTimeout(resolve, config.pollIntervalMs));
     }
   }
 }
+
+/** A generation job is finished once it reports 100% progress or `ready`. */
+export const isJobReady = (r: LetzAiJob): boolean =>
+  (r.progress ?? 0) >= 100 || r.status === 'ready';

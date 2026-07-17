@@ -6,7 +6,7 @@ This replaces the old local **stdio** `letzai-mcp` (Claude-Desktop-only, per-use
 
 ## Status
 
-**MVP scaffold — not yet build-verified.** Contains the HTTP transport, per-request bearer auth, and the first tool (`generate_image`) wired to the public API. Next: `npm install && npm run build`, then a live smoke test.
+**Working tool set (24 tools) — build + boot verified.** HTTP transport, per-request bearer auth, and tools across all public-API resources. Build (`tsc`) is clean and `tools/list` returns the full set; individual tool *calls* still need a live smoke test against a real integration token (they spend credits).
 
 ## Architecture
 
@@ -14,12 +14,20 @@ This replaces the old local **stdio** `letzai-mcp` (Claude-Desktop-only, per-use
 - **Auth (MVP):** `Authorization: Bearer <LetzAI integration token>`; the token is forwarded to the LetzAI public API, which enforces permissions and deducts credits. The server holds **no** global key. (Phase 1.5: OAuth 2.1.)
 - **Tools are thin adapters** over the existing public API — no generation logic is reimplemented.
 
-## Tools
+## Tools (24)
 
-| Tool | Wraps | Status |
-| --- | --- | --- |
-| `generate_image` | `POST /images` + poll `GET /images/{id}` | scaffolded |
-| `generate_video`, `edit_image`, `upscale`, `list_models`, `get_generation_status` | — | planned |
+Thin adapters over the public API — grouped by resource. Generation tools that can be slow (video/edit/upscale) return the created id immediately; poll the matching `get_*`. `generate_image` blocks until ready and returns the URL.
+
+| Resource | Tools |
+| --- | --- |
+| Images | `generate_image`, `get_image`, `list_images`, `interrupt_image`, `set_image_privacy` |
+| Image edits | `edit_image`, `get_image_edit`, `list_image_edits` |
+| Videos | `generate_video`, `get_video`, `list_videos`, `set_video_privacy` |
+| Upscale | `upscale_image`, `get_upscale`, `list_upscales`, `delete_upscale` |
+| Models | `list_models`, `get_model`, `create_model`, `update_model`, `delete_model` |
+| User assets | `list_user_assets`, `get_user_asset`, `list_user_images` |
+
+Not yet exposed (multipart upload / niche): asset upload (`POST /user-assets`, `/user-images`), model thumbnail, image-edit mask fetch, prompt-privacy variants.
 
 ## Run locally
 

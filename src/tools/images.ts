@@ -13,17 +13,19 @@ export function registerImageTools(
       title: 'Generate an image',
       description:
         'Generate an image from a text prompt. Waits until the image is ready ' +
-        'and returns its URL. Credits are deducted from the caller (or the ' +
-        'given organization).',
+        'and returns its URL. Write the prompt as director\'s notes (subject, ' +
+        'framing, angle, light, mood) — no quality-padding tags. To use a ' +
+        'user-trained model, put its @handle in the prompt text (confirm it ' +
+        'with list_models first; never invent one). Credits are deducted from ' +
+        'the caller (or the given organization).',
       inputSchema: {
-        prompt: z.string().min(1).describe('Text description of the image'),
+        prompt: z.string().min(1).describe('Text description of the image (director\'s notes; @handle for a trained model goes here)'),
+        baseModel: z.string().optional().describe('Base model — canonical value from the letzai://models resource (e.g. seedream-4-5-251128); omit for the default. Never pass a friendly alias.'),
         width: z.number().int().min(480).max(2160).optional().describe('Width in px (480-2160, default 1600)'),
         height: z.number().int().min(480).max(2160).optional().describe('Height in px (480-2160, default 1600)'),
-        quality: z.number().int().min(1).max(6).optional().describe('Quality level (1-6, default 2)'),
+        quality: z.number().int().min(1).max(6).optional().describe('Quality level (1-6, default 2). Keep low unless the user asks for high quality/final — they pay per level.'),
         creativity: z.number().int().min(1).max(6).optional().describe('Creativity level (1-6, default 2)'),
         hasWatermark: z.boolean().optional().describe('Apply a watermark (default true)'),
-        systemVersion: z.number().int().optional().describe('AI system version (2 or 3)'),
-        mode: z.string().optional().describe('Generation mode ("default" or "sigma")'),
         organizationId: z.string().uuid().optional().describe('Organization to deduct credits from (caller must be a member)'),
       },
     },

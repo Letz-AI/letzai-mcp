@@ -17,7 +17,8 @@ the caller's own token, so permissions and credits resolve to that user or
 organization. The server holds no key of its own. 24 tools cover image and video
 generation, image editing, upscaling, trained models and user assets.
 
-See [`server/README.md`](server/README.md) for the tool list and local development.
+See [`server/README.md`](server/README.md) for the tool list and local development, and
+[`server/docs/user-guide.md`](server/docs/user-guide.md) for the end-user setup guide.
 
 ## Local stdio server (`stdio/`)
 

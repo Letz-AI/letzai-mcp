@@ -1,0 +1,73 @@
+name: Deploy MCP (prod)
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+# Federated into GCP via Workload Identity — no long-lived keys in this repo.
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and roll out
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Typecheck and build
+        working-directory: server
+        run: |
+          npm ci
+          npm run build
+
+      - name: Authenticate to GCP (WIF)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/546016619504/locations/global/workloadIdentityPools/github-actions/providers/github
+          service_account: github-actions@acquired-grid-467415-t3.iam.gserviceaccount.com
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
+
+      - name: Build and push image
+        env:
+          AR_URI: europe-west1-docker.pkg.dev/acquired-grid-467415-t3/letzai-containers/letzai-mcp
+        run: |
+          docker build -t $AR_URI:latest -t $AR_URI:${GITHUB_SHA::7} server
+          docker push $AR_URI:latest
+          docker push $AR_URI:${GITHUB_SHA::7}
+
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: letzai-prod-services-gcp
+          location: europe-west1-b
+
+      - name: Roll out
+        run: |
+          kubectl -n mcp rollout restart deployment/mcp
+          kubectl -n mcp rollout status deployment/mcp --timeout=5m
+
+      # Fails the run if the rollout left something that does not answer.
+      - name: Verify mcp.letz.ai
+        run: |
+          set -euo pipefail
+          code=$(curl -s -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 5 https://mcp.letz.ai/)
+          [ "$code" = 200 ] || { echo "landing page returned $code"; exit 1; }
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST https://mcp.letz.ai/mcp \
+            -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}')
+          [ "$code" = 401 ] || { echo "unauthenticated MCP call returned $code, expected 401"; exit 1; }
+          echo "mcp.letz.ai healthy"

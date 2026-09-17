@@ -3,13 +3,13 @@ name: Deploy MCP (dev)
 on:
   push:
     branches: [main]
+    # Negated patterns rather than paths-ignore: GitHub rejects both filters on
+    # one event. Docs don't ship in the image, so they shouldn't roll the deployment.
     paths:
       - "server/**"
+      - "!server/docs/**"
+      - "!server/README.md"
       - ".github/workflows/deploy-dev.yml"
-    # Docs don't ship in the image, so they shouldn't roll the deployment.
-    paths-ignore:
-      - "server/docs/**"
-      - "server/README.md"
   workflow_dispatch:
 
 # Federated into GCP via Workload Identity — no long-lived keys in this repo.

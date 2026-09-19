@@ -8,6 +8,7 @@ import { registerVideoTools } from './tools/videos.js';
 import { registerUpscaleTools } from './tools/upscale.js';
 import { registerModelTools } from './tools/models.js';
 import { registerUserAssetTools } from './tools/user-assets.js';
+import { TOOL_SCOPES } from './scopes.js';
 
 /**
  * Build a per-request MCP server bound to the caller's integration token.
@@ -24,6 +25,18 @@ export function buildMcpServer(token: string): McpServer {
     { instructions: LETZAI_INSTRUCTIONS },
   );
   const client = new LetzAiClient(token);
+
+  // Every tool must declare the scope a connector token needs for it. Failing here, at
+  // construction, means a tool added without one breaks the first request in development
+  // and the test suite — not a user's session in production.
+  const registerTool = server.registerTool.bind(server);
+  server.registerTool = ((name: string, ...rest: unknown[]) => {
+    if (!TOOL_SCOPES[name]) {
+      throw new Error(`Tool "${name}" has no entry in TOOL_SCOPES (src/scopes.ts).`);
+    }
+
+    return (registerTool as (...args: unknown[]) => unknown)(name, ...rest);
+  }) as typeof server.registerTool;
 
   server.registerResource(
     'letzai-models',

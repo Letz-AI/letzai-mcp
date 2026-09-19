@@ -9,8 +9,10 @@ Two MCP servers for [LetzAI](https://letz.ai), in one repo.
 
 ## Hosted server (`server/`)
 
-The one to point an MCP client at. Add `https://mcp.letz.ai/mcp` and authenticate
-with a LetzAI integration token as a bearer token.
+The one to point an MCP client at. Add `https://mcp.letz.ai/mcp`. With OAuth enabled the client
+sends you to LetzAI to log in and approve — no key to paste. A LetzAI integration token as a
+bearer token works too, and always will for scripts. See
+[`server/docs/authentication.md`](server/docs/authentication.md).
 
 It is a thin, stateless adapter over the LetzAI public API: every request carries
 the caller's own token, so permissions and credits resolve to that user or

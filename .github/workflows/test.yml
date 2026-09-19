@@ -1,0 +1,45 @@
+name: Test
+
+on:
+  pull_request:
+    paths:
+      - "server/**"
+      - ".github/workflows/**"
+  push:
+    branches: [main]
+    paths:
+      - "server/**"
+
+permissions:
+  contents: read
+
+jobs:
+  server:
+    name: Hosted server
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - run: npm ci
+
+      - name: Typecheck (source and tests)
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # Fails the build on anything high or critical in what actually ships.
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high

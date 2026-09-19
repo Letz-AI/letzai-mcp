@@ -6,12 +6,12 @@ This replaces the old local **stdio** `letzai-mcp` (Claude-Desktop-only, per-use
 
 ## Status
 
-**Working tool set (24 tools) — build + boot verified.** HTTP transport, per-request bearer auth, and tools across all public-API resources. Build (`tsc`) is clean and `tools/list` returns the full set; individual tool *calls* still need a live smoke test against a real integration token (they spend credits).
+**Working tool set (24 tools) — build + boot verified.** HTTP transport, per-request bearer auth, and tools across all public-API resources. Build (`tsc`) is clean and `tools/list` returns the full set; individual tool *calls* still need a live smoke test against a real integration token (they spend credits). Authentication, scopes and the OAuth resource-server behaviour are covered by `npm test` (40 tests, no network).
 
 ## Architecture
 
 - **Transport:** Streamable HTTP (stateless — one MCP server + transport per request).
-- **Auth (MVP):** `Authorization: Bearer <LetzAI integration token>`; the token is forwarded to the LetzAI public API, which enforces permissions and deducts credits. The server holds **no** global key. (Phase 1.5: OAuth 2.1.)
+- **Auth:** a bearer token per request, of either kind — a **connector token** obtained through OAuth (add the URL, log in to LetzAI, approve; no key to paste) or a LetzAI **integration token** (API key). Either way the token is forwarded to the LetzAI public API, which enforces permissions and deducts credits. The server holds **no** key or secret of its own. OAuth is behind `LETZAI_OAUTH_ENABLED` and off by default. See [`docs/authentication.md`](docs/authentication.md).
 - **Tools are thin adapters** over the existing public API — no generation logic is reimplemented.
 
 ## Tools (24)

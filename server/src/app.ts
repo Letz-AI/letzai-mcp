@@ -46,6 +46,27 @@ export function missingScopes(body: unknown, granted: readonly string[]): Scope[
 export function createApp(): Express {
   const app = express();
   app.disable('x-powered-by');
+
+  // Browser-based MCP clients call this server cross-origin. Opening it up is safe because
+  // nothing here is authenticated by cookies — a page can only send a bearer token it already
+  // holds — and `Access-Control-Allow-Credentials` is deliberately never set. Exposing
+  // WWW-Authenticate is the part that matters: without it a browser client cannot read the
+  // challenge, and so can never find out how to log in.
+  app.use((req: Request, res: Response, next) => {
+    res.set({
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept, Mcp-Protocol-Version, Mcp-Session-Id, Last-Event-ID',
+      'Access-Control-Expose-Headers': 'WWW-Authenticate, Mcp-Session-Id',
+      'Access-Control-Max-Age': '86400',
+    });
+    if (req.method === 'OPTIONS') {
+      res.status(204).end();
+      return;
+    }
+    next();
+  });
+
   app.use(express.json({ limit: '1mb' }));
 
   // Human-facing landing page / user guide (same host as the MCP protocol).

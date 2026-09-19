@@ -247,6 +247,37 @@ describe('X-COMPAT-01 integration tokens still work exactly as before', () => {
   });
 });
 
+describe('browser-based clients (CORS)', () => {
+  it('lets a page read the challenge, which is the only way it can learn how to log in', async () => {
+    const response = await fetch(`${mcp.url}/mcp`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', origin: 'https://inspector.example' },
+      body: JSON.stringify(initialize),
+    });
+
+    assert.equal(response.status, 401);
+    assert.equal(response.headers.get('access-control-allow-origin'), '*');
+    assert.ok((response.headers.get('access-control-expose-headers') ?? '').includes('WWW-Authenticate'));
+  });
+
+  it('answers a preflight, allowing the Authorization header', async () => {
+    const response = await fetch(`${mcp.url}/mcp`, {
+      method: 'OPTIONS',
+      headers: { origin: 'https://inspector.example', 'access-control-request-method': 'POST', 'access-control-request-headers': 'authorization,content-type' },
+    });
+
+    assert.equal(response.status, 204);
+    assert.ok((response.headers.get('access-control-allow-headers') ?? '').includes('Authorization'));
+  });
+
+  it('never allows credentials — this server is authenticated by bearer tokens, not cookies', async () => {
+    const response = await fetch(`${mcp.url}/.well-known/oauth-protected-resource`, { headers: { origin: 'https://evil.example' } });
+
+    assert.equal(response.headers.get('access-control-allow-credentials'), null);
+    assert.equal(response.status, 200);
+  });
+});
+
 describe('other methods', () => {
   it('answers 405 for GET and DELETE on /mcp — this server is stateless', async () => {
     assert.equal((await fetch(`${mcp.url}/mcp`)).status, 405);

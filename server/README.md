@@ -6,7 +6,7 @@ This replaces the old local **stdio** `letzai-mcp` (Claude-Desktop-only, per-use
 
 ## Status
 
-**Working tool set (24 tools) — build + boot verified.** HTTP transport, per-request bearer auth, and tools across all public-API resources. Build (`tsc`) is clean and `tools/list` returns the full set; individual tool *calls* still need a live smoke test against a real integration token (they spend credits). Authentication, scopes and the OAuth resource-server behaviour are covered by `npm test` (40 tests, no network).
+**Working tool set (24 tools) — build + boot verified.** HTTP transport, per-request bearer auth, and tools across all public-API resources. Build (`tsc`) is clean and `tools/list` returns the full set; individual tool *calls* still need a live smoke test against a real integration token (they spend credits). Authentication, scopes and the OAuth resource-server behaviour are covered by `npm test` (43 tests, no network).
 
 ## Architecture
 

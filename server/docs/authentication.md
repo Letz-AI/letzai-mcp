@@ -94,6 +94,13 @@ batch — so a client can ask the user once. `initialize` and `tools/list` need 
 
 API keys carry no scopes and are not subject to any of this.
 
+## Browser-based clients
+
+Every response carries `Access-Control-Allow-Origin: *` and exposes `WWW-Authenticate`, so an MCP
+client running in a page can read the challenge and start the flow. This is safe because nothing
+here is authenticated by cookies — a page can only present a bearer token it already holds — and
+`Access-Control-Allow-Credentials` is never sent.
+
 ## Turning it on
 
 OAuth is **off by default**: with `LETZAI_OAUTH_ENABLED` unset there is no metadata document, a
@@ -122,7 +129,7 @@ In the Kubernetes deployment these go in `gcp/workloads/mcp/deployment.yaml` in 
 ## Testing
 
 ```bash
-npm test          # 40 tests, against a fake LetzAI API — no network, no credentials
+npm test          # 43 tests, against a fake LetzAI API — no network, no credentials
 npm run typecheck # source and tests
 ```
 

@@ -8,6 +8,7 @@ import { registerVideoTools } from './tools/videos.js';
 import { registerUpscaleTools } from './tools/upscale.js';
 import { registerModelTools } from './tools/models.js';
 import { registerUserAssetTools } from './tools/user-assets.js';
+import { TOOL_ANNOTATIONS } from './annotations.js';
 import { TOOL_SCOPES } from './scopes.js';
 
 /**
@@ -26,16 +27,20 @@ export function buildMcpServer(token: string): McpServer {
   );
   const client = new LetzAiClient(token);
 
-  // Every tool must declare the scope a connector token needs for it. Failing here, at
-  // construction, means a tool added without one breaks the first request in development
-  // and the test suite — not a user's session in production.
+  // Every tool must declare the scope a connector token needs for it, and how it behaves
+  // (annotations). Failing here, at construction, means a tool added without either breaks
+  // the first request in development and the test suite — not a user's session in production.
   const registerTool = server.registerTool.bind(server);
-  server.registerTool = ((name: string, ...rest: unknown[]) => {
+  server.registerTool = ((name: string, config: Record<string, unknown>, ...rest: unknown[]) => {
     if (!TOOL_SCOPES[name]) {
       throw new Error(`Tool "${name}" has no entry in TOOL_SCOPES (src/scopes.ts).`);
     }
+    if (!TOOL_ANNOTATIONS[name]) {
+      throw new Error(`Tool "${name}" has no entry in TOOL_ANNOTATIONS (src/annotations.ts).`);
+    }
 
-    return (registerTool as (...args: unknown[]) => unknown)(name, ...rest);
+    const annotations = { title: config.title, ...TOOL_ANNOTATIONS[name] };
+    return (registerTool as (...args: unknown[]) => unknown)(name, { ...config, annotations }, ...rest);
   }) as typeof server.registerTool;
 
   server.registerResource(

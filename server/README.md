@@ -27,6 +27,8 @@ Thin adapters over the public API — grouped by resource. Generation tools that
 | Models | `list_models`, `get_model`, `create_model`, `update_model`, `delete_model` |
 | User assets | `list_user_assets`, `get_user_asset`, `list_user_images` |
 
+Every tool carries MCP annotations — read-only, destructive, idempotent — from [`src/annotations.ts`](src/annotations.ts). Clients use them to decide what to run without asking (and connector directories require them). Like scopes, a tool missing from that table fails at startup.
+
 Not yet exposed (multipart upload / niche): asset upload (`POST /user-assets`, `/user-images`), model thumbnail, image-edit mask fetch, prompt-privacy variants.
 
 ## Run locally

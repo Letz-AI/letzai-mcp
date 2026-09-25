@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Hosted LetzAI MCP server (mcp.letz.ai) — exposes LetzAI generation as MCP tools over Streamable HTTP. Phase 1 of #966.",
-  "engines": { "node": ">=20" },
+  "description": "Hosted LetzAI MCP server (mcp.letz.ai) \u2014 exposes LetzAI generation as MCP tools over Streamable HTTP. Phase 1 of #966.",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
-    "inspector": "npx @modelcontextprotocol/inspector"
+    "inspector": "npx @modelcontextprotocol/inspector",
+    "test": "node --import tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

@@ -23,10 +23,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Typecheck and build
+      # Nothing is built into an image, let alone rolled out, unless the suite passes.
+      - name: Typecheck, test and build
         working-directory: server
         run: |
           npm ci
+          npm run typecheck
+          npm test
           npm run build
 
       - name: Authenticate to GCP (WIF)
